@@ -47,3 +47,18 @@ class Banner(models.Model):
     class Meta:
         verbose_name = u"轮播图"
         verbose_name_plural = verbose_name
+
+class channel(models.Model):
+    id = models.AutoField
+    name = models.CharField(max_length=32)
+    md5sum = models.CharField(max_length=7)
+    gate_ip = models.CharField(max_length=32)
+    gate_port = models.IntegerField(default=9310)
+    platform = models.CharField(max_length=32)
+    in_use = models.IntegerField(default=1)
+    dns_push_date = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    modify_date = models.DateTimeField(default=datetime.now, verbose_name=u"修改时间")
+
+    class Meta():
+        verbose_name = u"渠道信息表"
+        verbose_name_plural = verbose_name
