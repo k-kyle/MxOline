@@ -27,10 +27,13 @@ SECRET_KEY = '-vc0=lp*klqwp#e4oi5ab4-#l^u#fbj++8z@k1y!gzext@zzj!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
 
 
-# Application definition
+#Application definition
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
