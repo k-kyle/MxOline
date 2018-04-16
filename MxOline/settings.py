@@ -141,3 +141,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     ]
+
+EMAIL_HOST = "smtp.ym.163.com"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "wangke@51yuyou.com"
+EMAIL_HOST_PASSWORD = "wangke4059"
+EMAIL_USE_TLS= False
+EMAIL_FROM = "wangke@51yuyou.com"
