@@ -1,3 +1,4 @@
+# _*_ coding: utf-8 _*_
 """
 Django settings for MxOline project.
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'captcha',
+    'pure_pagination',
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"
@@ -78,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #处理下面配置的MEDIA_URL
+                'django.core.context_processors.media',
             ],
         },
     },
@@ -148,3 +152,7 @@ EMAIL_HOST_USER = "wangke@51yuyou.com"
 EMAIL_HOST_PASSWORD = "wangke4059"
 EMAIL_USE_TLS= False
 EMAIL_FROM = "wangke@51yuyou.com"
+
+#资源文件上传的路径
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
