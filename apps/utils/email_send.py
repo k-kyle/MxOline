@@ -3,10 +3,12 @@ __author__ = 'xiaoke'
 __date__ = '2018/4/13 15:05'
 
 from random import Random
+
 from django.core.mail import send_mail
 
-from users.models import EmailVerifyRecord
 from MxOline.settings import EMAIL_FROM
+from users.models import EmailVerifyRecord
+
 
 def random_str(randomlength=8):
     str = ''
@@ -14,7 +16,7 @@ def random_str(randomlength=8):
     length = len(chars) - 1
     random = Random()
     for i in range(randomlength):
-        str+=chars[random.randint(0, length)]
+        str += chars[random.randint(0, length)]
     return str
 
 
@@ -53,5 +55,3 @@ def send_register_email(email, send_type="register"):
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
         if send_status:
             pass
-
-

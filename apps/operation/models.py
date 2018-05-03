@@ -31,6 +31,9 @@ class CourseComments(models.Model):
         verbose_name = u"课程评论"
         verbose_name_plural = verbose_name
 
+    def __unicode__(self):
+        return self.user
+
 
 class UserFavorite(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name=u"用户")
