@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, PageNotAnInteger
 
-from .models import Course
-from operation.models import UserFavorite, CourseComments, UserCourses
+from operation.models import UserFavorite
+from .models import Course, CourseResource
+
 
 # Create your views here.
 
@@ -76,4 +77,34 @@ class CourseDetailView(View):
             "relate_courses": relate_courses,
             "has_fav_course": has_fav_course,
             "has_fav_org": has_fav_org,
+        })
+
+
+class CourseInfoView(View):
+    """
+    课程章节信息
+    """
+
+    def get(self, request, course_id):
+        course = Course.objects.get(id=int(course_id))
+        course.students += 1
+        course.save()
+        # # 查询用户是否已经关联了该课程
+        # user_courses = UserCourse.objects.filter(user=request.user, course=course)
+        # if not user_courses:
+        #     user_course = UserCourse(user=request.user, course=course)
+        #     user_course.save()
+        #
+        # user_cousers = UserCourse.objects.filter(course=course)
+        # user_ids = [user_couser.user.id for user_couser in user_cousers]
+        # all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        # # 取出所有课程id
+        # course_ids = [user_couser.course.id for user_couser in all_user_courses]
+        # # 获取学过该用户学过其他的所有课程
+        # relate_courses = Course.objects.filter(id__in=course_ids).order_by("-click_nums")[:5]
+        all_resources = CourseResource.objects.filter(course=course)
+        return render(request, "course-video.html", {
+            "course": course,
+            "course_resources": all_resources,
+            # "relate_courses": relate_courses
         })

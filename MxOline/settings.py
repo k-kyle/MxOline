@@ -81,7 +81,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 #处理下面配置的MEDIA_URL
-                'django.core.context_processors.media',
+                'django.template.context_processors.media',
             ],
         },
     },
