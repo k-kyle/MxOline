@@ -20,11 +20,8 @@ from django.views.generic import TemplateView
 from django.views.static import serve
 
 import xadmin
-from users.views import LoginView, RegisterView, AciveUserView, ForgetPwdView, ResetView, ModifyPwdView
-from organization.views import OrgView
 from MxOline.settings import MEDIA_ROOT
-
-
+from users.views import LoginView, RegisterView, AciveUserView, ForgetPwdView, ResetView, ModifyPwdView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,14 +35,14 @@ urlpatterns = [
     url(r'^forget/$', ForgetPwdView.as_view(), name='forget_pwd'),
     url(r'^modify_pwd/$', ModifyPwdView.as_view(), name="modify_pwd"),
 
-    #课程机构url配置
+    # 课程机构url配置
     url(r'^org/', include("organization.urls", namespace="org")),
 
     # 课程相关url配置
-    # url(r'^course/', include('courses.urls', namespace="course")),
+    url(r'^course/', include('courses.urls', namespace="course")),
 
-    #配置上传文件的访问处理函数
-    url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),
+    # 配置上传文件的访问处理函数
+    url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
     # url(r'^static/(?P<path>.*)$',  serve, {"document_root":STATIC_ROOT}),
 
 ]
