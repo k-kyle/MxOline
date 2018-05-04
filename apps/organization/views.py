@@ -4,11 +4,11 @@ from django.shortcuts import render
 from django.views.generic import View
 from pure_pagination import Paginator, PageNotAnInteger
 
+from courses.models import Course
 # Create your views here.
 from operation.models import UserFavorite
 from .forms import UserAskForm
 from .models import CourseOrg, CityDict, Teater
-from courses.models import Course
 
 
 class OrgView(View):
@@ -165,21 +165,23 @@ class OrgTeacherView(View):
             'has_fav': has_fav
         })
 
+
 class AddFavView(View):
     """
     用户收藏，用户取消收藏
     """
+
     def post(self, request):
         fav_id = request.POST.get('fav_id', 0)
         fav_type = request.POST.get('fav_type', 0)
 
         if not request.user.is_authenticated():
-            #判断用户登录状态
+            # 判断用户登录状态
             return HttpResponse('{"status":"fail", "msg":"用户未登录"}', content_type='application/json')
 
         exist_records = UserFavorite.objects.filter(user=request.user, fav_id=int(fav_id), fav_type=int(fav_type))
         if exist_records:
-            #如果记录已经存在， 则表示用户取消收藏
+            # 如果记录已经存在， 则表示用户取消收藏
             exist_records.delete()
             if int(fav_type) == 1:
                 course = Course.objects.get(id=int(fav_id))
@@ -224,3 +226,42 @@ class AddFavView(View):
                 return HttpResponse('{"status":"success", "msg":"已收藏"}', content_type='application/json')
             else:
                 return HttpResponse('{"status":"fail", "msg":"收藏出错"}', content_type='application/json')
+
+
+class TeacherListView(View):
+    """
+    课程讲师列表页
+    """
+
+    def get(self, request):
+        all_teachers = Teater.objects.all()
+
+        # 课程讲师搜索
+        search_keywords = request.GET.get('keywords', "")
+        # if search_keywords:
+        # all_teachers = all_teachers.filter(Q(name__icontains=search_keywords) |
+        #                                    Q(work_company__icontains=search_keywords) |
+        #                                    Q(work_position__icontains=search_keywords))
+        # 热门讲师排序
+        sort = request.GET.get('sort', "")
+        if sort:
+            if sort == "hot":
+                all_teachers = all_teachers.order_by("-click_num")
+
+        # 讲师排行榜
+        sorted_teacher = Teater.objects.all().order_by("-click_num")[:3]
+
+        # 对讲师进行分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_teachers, 3, request=request)
+
+        teachers = p.page(page)
+        return render(request, "teachers-list.html", {
+            "all_teachers": teachers,
+            "sorted_teacher": sorted_teacher,
+            "sort": sort,
+        })
