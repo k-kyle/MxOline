@@ -197,9 +197,9 @@ class AddFavView(View):
                 course_org.save()
             elif int(fav_type) == 3:
                 teacher = Teater.objects.get(id=int(fav_id))
-                teacher.fav_nums -= 1
-                if teacher.fav_nums < 0:
-                    teacher.fav_nums = 0
+                teacher.fav_num -= 1
+                if teacher.fav_num < 0:
+                    teacher.fav_num = 0
                 teacher.save()
             return HttpResponse('{"status":"success", "msg":"收藏"}', content_type='application/json')
         else:
@@ -220,7 +220,7 @@ class AddFavView(View):
                     course_org.save()
                 elif int(fav_type) == 3:
                     teacher = Teater.objects.get(id=int(fav_id))
-                    teacher.fav_nums += 1
+                    teacher.fav_num += 1
                     teacher.save()
 
                 return HttpResponse('{"status":"success", "msg":"已收藏"}', content_type='application/json')
@@ -264,4 +264,32 @@ class TeacherListView(View):
             "all_teachers": teachers,
             "sorted_teacher": sorted_teacher,
             "sort": sort,
+        })
+
+
+class TeacherDetailView(View):
+    def get(self, request, teacher_id):
+        teacher = Teater.objects.get(id=int(teacher_id))
+        teacher.click_num += 1
+        teacher.save()
+        all_courses = Course.objects.filter(teacher=teacher)
+
+        has_teacher_faved = False
+        if request.user.is_authenticated():
+            if UserFavorite.objects.filter(user=request.user, fav_type=3, fav_id=teacher.id):
+                has_teacher_faved = True
+
+        has_org_faved = False
+        if request.user.is_authenticated():
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=teacher.org.id):
+                has_org_faved = True
+
+        #讲师排行
+        sorted_teacher = Teater.objects.all().order_by("-click_num")[:3]
+        return render(request, "teacher-detail.html", {
+            "teacher":teacher,
+            "all_courses":all_courses,
+            "sorted_teacher":sorted_teacher,
+            "has_teacher_faved": has_teacher_faved,
+            "has_org_faved":has_org_faved
         })
